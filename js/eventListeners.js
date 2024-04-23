@@ -1,17 +1,36 @@
 window.addEventListener('keydown', (event) => {
+    if (player.preventInput) return
     switch (event.key) {
         case 'w':
-            if (player.velocity.y === 0 ) player.velocity.y = -25;
 
-        break
+            for (let i = 0; i < doors.length; i++) {
+                const door = doors[i]
+
+                if (
+                    player.hitbox.position.x + player.hitbox.width <= door.position.x + door.width &&
+                    player.hitbox.position.x >= door.position.x &&
+                    player.hitbox.position.y + player.hitbox.height >= door.position.y &&
+                    player.hitbox.position.y <= door.position.y + door.height
+                ) {
+                    player.velocity.x = 0;
+                    player.velocity.y = 0;
+                    player.preventInput = true;
+                    player.switchSprite('enterDoor');
+                    door.play();
+                    return
+                }
+            }
+            if (player.velocity.y === 0) player.velocity.y = -20;
+
+            break
         case 'a':
             //move left
             keys.a.pressed = true;
-        break
+            break
         case 'd':
             //move right
             keys.d.pressed = true;
-        break
+            break
     }
 });
 
@@ -20,12 +39,12 @@ window.addEventListener('keyup', (event) => {
         case 'a':
             //move left
             keys.a.pressed = false;
-            
-        break
+
+            break
         case 'd':
             //move right
             keys.d.pressed = false;
 
-        break
+            break
     }
 });
